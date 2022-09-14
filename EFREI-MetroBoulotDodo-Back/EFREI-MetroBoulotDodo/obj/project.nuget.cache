@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "uMeu6L3s7hUC2IYA5/Lm7HMCFq+h9KsmQDZASbiXllUzjbsKWUnSGGErFqlAMnf3xjUZoyOj9MqgKTKnDF3E5g==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\abdel\\Desktop\\EFREI\\Efrei-MetroBoulotDodo\\EFREI-MetroBoulotDodo-Back\\EFREI-MetroBoulotDodo\\EFREI-MetroBoulotDodo.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\abdel\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
+    "C:\\Users\\abdel\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\abdel\\.nuget\\packages\\swashbuckle.aspnetcore\\5.6.3\\swashbuckle.aspnetcore.5.6.3.nupkg.sha512",
+    "C:\\Users\\abdel\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\5.6.3\\swashbuckle.aspnetcore.swagger.5.6.3.nupkg.sha512",
+    "C:\\Users\\abdel\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\5.6.3\\swashbuckle.aspnetcore.swaggergen.5.6.3.nupkg.sha512",
+    "C:\\Users\\abdel\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\5.6.3\\swashbuckle.aspnetcore.swaggerui.5.6.3.nupkg.sha512"
+  ],
+  "logs": []
+}
