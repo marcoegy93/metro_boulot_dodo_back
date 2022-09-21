@@ -106,7 +106,7 @@ namespace MetroBoulotDodo.Services
             //sortedChildren[0]
             foreach(Station station in debut.getConnecte())
             {
-                
+                //fuck
             }
             //Hashmap containing pairs of stops and distances
             //For each child, store the debut stop and the distance the child has from it
