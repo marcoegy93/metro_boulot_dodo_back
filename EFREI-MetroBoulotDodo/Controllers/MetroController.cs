@@ -24,7 +24,14 @@ namespace EFREI_MetroBoulotDodo.Controllers
               return  new List<string>() { "c#" ,"sql"};
           }
 
-      
+            [HttpGet("test")]
+            public IEnumerable<string> getDijkstra()
+            {
+            int a = 2;
+                return new List<string>() { "c#", "sql" };
+            }
+
+
 
     }
 }

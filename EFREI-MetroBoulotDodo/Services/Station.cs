@@ -49,7 +49,7 @@ namespace MetroBoulotDodo.Services
 
         public void ajoutdir(Station dir, int temps)
         {
-            connectes.Add(new Arrete(dir, temps));
+            connectes.Add(new Arrete(dir, this, temps));
         }
 
         public List<Arrete> getConnectes()

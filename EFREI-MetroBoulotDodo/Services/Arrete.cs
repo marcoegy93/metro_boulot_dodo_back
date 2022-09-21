@@ -12,6 +12,7 @@ namespace MetroBoulotDodo.Services
     public class Arrete
     {
         private Station dir;
+        private Station stationOrigine;
         private int temps;
 
         public Station getDir()
@@ -24,10 +25,13 @@ namespace MetroBoulotDodo.Services
             return temps;
         }
 
-        public Arrete(Station dir, int temps)
+        public Station getStationOrigine() { return stationOrigine; }
+
+        public Arrete(Station dir, Station stationOrigine, int temps)
         {
             this.dir = dir;
             this.temps = temps;
+            this.stationOrigine = stationOrigine;
         }
 
         public void stringtest()

@@ -89,30 +89,24 @@ namespace MetroBoulotDodo.Services
                                 b.ajoutdir(station, t);
                             }
                         }
-
-
                     }
                 }
                 foreach (KeyValuePair<int, Station> sta in Stations)
                     sta.Value.stringtest();
             }
         }
-        private List<Station> getDijkstra(Station debut, Station fin)
-        {
-            IDictionary<int, int> distances = new Dictionary<int, int>();
-            List<Station> path = new List<Station>();
-            path.Add(debut);
 
-        }
         // Store the new children directly in the distances map and sort the map afterwards, then add the first element of the map to path that isnt already a part of it
         private List<Station> getShortestPath(Station debut, Station fin)
         {
-            IDictionary<int, int> distances = new Dictionary<int, int>();
+
+            IDictionary<string, int> temps = new Dictionary<string, int>();
             List<Station> path = new List<Station>();
             path.Add(debut);
             List<Station> traites = new List<Station>();
             traites.Add(debut);
-            while (!(path.Contains(fin))){ 
+            while (!(traites.Any(item=> item.getname() == fin.getname()))){
+
                 List<Arrete> connectes = new List<Arrete>();
                 foreach(Station station in traites) {
                     foreach (Arrete arrete in station.getConnectes())
@@ -123,9 +117,8 @@ namespace MetroBoulotDodo.Services
                 }
 
                 metroService.quickSort(connectes, 0, connectes.Count - 1);
-                Arrete arreteChoisi;//= connectes[0];
+                Arrete arreteChoisi= connectes[0];
                 traites.Add(arreteChoisi.getDir());
-                //
                 bool firstNonTraites = true;
                 foreach(Arrete arrete in connectes)
                 {
@@ -133,19 +126,20 @@ namespace MetroBoulotDodo.Services
                     {
                         if(firstNonTraites) arreteChoisi = arrete;
                         //Mettre a jour la distance
-
+                        string nomStation = arrete.getDir().getname();
+                        if (temps.ContainsKey(nomStation)) {
+                            if ((arrete.getTemps() + temps[arrete.getStationOrigine().getname()])  < temps[nomStation] ) {
+                                temps[nomStation] = arrete.getTemps();
+                            }
+                        } else {
+                            temps.Add(nomStation, arrete.getTemps() + temps[arrete.getStationOrigine().getname()]);
+                        }
                     }
                 }
-                //path.Add(arreteChoisi.getDir());
-                //distances.Add(arreteChoisi.getDir().getNumero(), arreteChoisi.getTemps());
+
             }
 
 
-            //getShortestPath();
-            //Hashmap containing pairs of stops and distances
-            //For each child, store the debut stop and the distance the child has from it
-            //For each child, sore the child with the shortest distance and later recursivly use this fonctionon it
-            //If child with shortest path is the end node, stop the algorithm
             return null;
         }
 
