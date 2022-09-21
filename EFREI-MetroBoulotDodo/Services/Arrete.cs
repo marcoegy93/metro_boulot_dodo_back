@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -13,6 +14,15 @@ namespace MetroBoulotDodo.Services
         private Station dir;
         private int temps;
 
+        public Station getDir()
+        {
+            return dir;
+        }
+
+        public int getTemps()
+        {
+            return temps;
+        }
 
         public Arrete(Station dir, int temps)
         {

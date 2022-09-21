@@ -15,7 +15,7 @@ namespace MetroBoulotDodo.Services
         private string embranchement;
         private string ligne;
         private int num;
-        private ArrayList connecté = new ArrayList();
+        private List<Arrete> connectes = new List<Arrete>();
 
 
         public Station(int num, string name, string ligne, bool terminus, string embranchement)
@@ -37,7 +37,7 @@ namespace MetroBoulotDodo.Services
                                   + " si_terminus: " + terminus
                                   + " branchement: " + embranchement
                                    );
-            foreach(Arrete a in connecté)
+            foreach(Arrete a in connectes)
             {
                 a.stringtest();
             }
@@ -49,13 +49,14 @@ namespace MetroBoulotDodo.Services
 
         public void ajoutdir(Station dir, int temps)
         {
-            connecté.Add(new Arrete(dir, temps));
+            connectes.Add(new Arrete(dir, temps));
         }
 
-        public ArrayList getConnecte()
+        public List<Arrete> getConnectes()
         {
-            return connecté;
+            return connectes;
         }
+        public int getNumero() { return num; }
 
 
 

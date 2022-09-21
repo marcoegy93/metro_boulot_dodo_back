@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Server.Kestrel.Core;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace MetroBoulotDodo.Services
 {
@@ -95,19 +97,51 @@ namespace MetroBoulotDodo.Services
                     sta.Value.stringtest();
             }
         }
-        // Store the new children directly in the distances map and sort the map afterwards, then add the first element of the map to path that isnt already a part of it
-        private ArrayList getShortestPath(Station debut, Station fin)
+        private List<Station> getDijkstra(Station debut, Station fin)
         {
             IDictionary<int, int> distances = new Dictionary<int, int>();
-            
-            ArrayList path = new ArrayList();
+            List<Station> path = new List<Station>();
             path.Add(debut);
-            ArrayList sortedChildren = quickSort(debut.getConnecte(), path);
-            //sortedChildren[0]
-            foreach(Station station in debut.getConnecte())
-            {
-                //fuck
+
+        }
+        // Store the new children directly in the distances map and sort the map afterwards, then add the first element of the map to path that isnt already a part of it
+        private List<Station> getShortestPath(Station debut, Station fin)
+        {
+            IDictionary<int, int> distances = new Dictionary<int, int>();
+            List<Station> path = new List<Station>();
+            path.Add(debut);
+            List<Station> traites = new List<Station>();
+            traites.Add(debut);
+            while (!(path.Contains(fin))){ 
+                List<Arrete> connectes = new List<Arrete>();
+                foreach(Station station in traites) {
+                    foreach (Arrete arrete in station.getConnectes())
+                    {
+                        connectes.Add(arrete);
+                    }
+                        
+                }
+
+                metroService.quickSort(connectes, 0, connectes.Count - 1);
+                Arrete arreteChoisi;//= connectes[0];
+                traites.Add(arreteChoisi.getDir());
+                //
+                bool firstNonTraites = true;
+                foreach(Arrete arrete in connectes)
+                {
+                    if (!(traites.Contains(arrete.getDir())))
+                    {
+                        if(firstNonTraites) arreteChoisi = arrete;
+                        //Mettre a jour la distance
+
+                    }
+                }
+                //path.Add(arreteChoisi.getDir());
+                //distances.Add(arreteChoisi.getDir().getNumero(), arreteChoisi.getTemps());
             }
+
+
+            //getShortestPath();
             //Hashmap containing pairs of stops and distances
             //For each child, store the debut stop and the distance the child has from it
             //For each child, sore the child with the shortest distance and later recursivly use this fonctionon it
@@ -117,15 +151,41 @@ namespace MetroBoulotDodo.Services
 
        
         //Possible use of quick sort but finally, no need.
-        private ArrayList quickSort(ArrayList list, ArrayList path)
+        private static void quickSort(List<Arrete> list,int premier, int dernier)
         {
-            foreach (Station station in list) ;// ...sort the list
-            //if station in path of already completed stations, dont add to list
-            return list;
+            if (premier < dernier)
+            {
+                int pivot = (dernier - premier) / 2 + premier;
+                pivot = repartir(list, premier, dernier, pivot);
+                quickSort(list, premier, pivot - 1);
+                quickSort(list, pivot + 1, dernier);
+            }
+            //foreach (Station station in list) ;// ...sort the list
+            ////if station in path of already completed stations, dont add to list
+            //return list;
         }
 
+        private static int repartir(List<Arrete> list, int premier, int dernier, int pivot)
+        {
+            swap(list, dernier, pivot);
+            int i = premier;
+            for (int j = premier; j < dernier; ++j)
+            {
+                if (list[j].getTemps() >= list[dernier].getTemps())
+                {
+                    swap(list, j, i);
+                    i++;
+                }
+            }
+            swap(list, dernier, i);
+            return i;
+        }
 
-
-
+        private static void swap(List<Arrete> list, int dernier, int pivot)
+        {
+            Arrete tmp = list[pivot];
+            list[pivot] = list[dernier];
+            list[dernier] = tmp;
+        }
     }
 }
