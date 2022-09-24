@@ -140,10 +140,11 @@ namespace MetroBoulotDodo.Services
                 }
 
             }
-            List<Station> path = new List<Station>();
-            while ()
-            {
-
+            List<PathElement> path = new List<PathElement>();
+            PathElement tempElement = temps[fin.getname()];
+            while (tempElement != null) {
+                path.Add(tempElement);
+                tempElement = temps[tempElement.NomAntecedant];
             }
             return null;
         }
