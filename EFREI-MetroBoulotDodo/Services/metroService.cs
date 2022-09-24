@@ -19,8 +19,8 @@ namespace MetroBoulotDodo.Services
         {
             //faire initialisation au lancement de l'app et non pas au lancement dune requete
             readFileMetro();
-            Station start = Stations[23];
-            Station end = Stations[214];
+            Station start = Stations[26];
+            Station end = Stations[24];
             getShortestPath(start, end);
         }
 
@@ -99,7 +99,7 @@ namespace MetroBoulotDodo.Services
         }
 
         // Store the new children directly in the distances map and sort the map afterwards, then add the first element of the map to path that isnt already a part of it
-        private List<Station> getShortestPath(Station debut, Station fin)
+        private List<PathElement> getShortestPath(Station debut, Station fin)
         {
 
             IDictionary<string, PathElement> temps = new Dictionary<string, PathElement>();
@@ -142,11 +142,14 @@ namespace MetroBoulotDodo.Services
             }
             List<PathElement> path = new List<PathElement>();
             PathElement tempElement = temps[fin.getname()];
-            while (tempElement != null) {
+            path.Add(tempElement);
+            while (tempElement.NomAntecedant != null) {
                 path.Add(tempElement);
                 tempElement = temps[tempElement.NomAntecedant];
             }
-            return null;
+
+            
+            return path;
         }
 
        
