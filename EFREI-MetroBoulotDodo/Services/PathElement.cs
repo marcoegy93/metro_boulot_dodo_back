@@ -33,21 +33,29 @@ namespace MetroBoulotDodo.Services
 
     public class PathElement
     {
-        private int _temps;  // the name field
-        public int Temps    // the Name property
+        private Station _station;  // the name field
+        public Station Station    // the Name property
+        {
+            get => _station;
+            set => _station = value;
+        }
+
+        private int _temps;  
+        public int Temps    
         {
             get => _temps;
             set => _temps = value;
         }
-        private string _nomAntecedant;  // the name field
-        public string NomAntecedant    // the Name property
+        private string _nomAntecedant;  
+        public string NomAntecedant    
         {
             get => _nomAntecedant;
             set => _nomAntecedant = value;
         }
 
-        public PathElement(int temps, string nomAntecedant)
+        public PathElement(Station station, int temps, string nomAntecedant)
         {
+            this._station = station;
             this._temps = temps;
             this._nomAntecedant = nomAntecedant;
         }

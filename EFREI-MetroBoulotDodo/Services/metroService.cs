@@ -103,13 +103,14 @@ namespace MetroBoulotDodo.Services
         {
 
             IDictionary<string, PathElement> temps = new Dictionary<string, PathElement>();
-            temps.Add(debut.getname(), new PathElement(0, null));
-            List<Station> traites = new List<Station>();
-            traites.Add(debut);
-            while (!(traites.Any(item=> item.getname() == fin.getname()))){
+            temps.Add(debut.getname(), new PathElement(debut, 0, null));
+            IDictionary<int, Station> traites = new Dictionary<int, Station>();
+            //List<Station> traites = new List<Station>();
+            traites.Add(debut.getNumero(), debut);
+            while (!(traites.Any(item=> item.Value.getname() == fin.getname()))){
 
                 List<Arrete> connectes = new List<Arrete>();
-                foreach(Station station in traites) {
+                foreach(Station station in traites.Values) {
                     foreach (Arrete arrete in station.getConnectes())
                     {
                         connectes.Add(arrete);
@@ -120,12 +121,12 @@ namespace MetroBoulotDodo.Services
                 metroService.quickSort(connectes, 0, connectes.Count - 1);
                 bool firstNonTraites = true;
                 foreach(Arrete arrete in connectes)
-                {
-                    if (!(traites.Any(item => item.getname() == arrete.getDir().getname())))
+                {  
+                    if (!(traites.ContainsKey(arrete.getDir().getNumero())))//Changement de ligne pas possible.  Here we say 'No trait pas les aretes qui vont a un station deja traitees. Mais '
                     {
                         if(firstNonTraites)
                         {
-                            traites.Add(arrete.getDir());
+                            traites.Add(arrete.getDir().getNumero(), arrete.getDir());
                         }
                         //Mettre a jour la distance
                         string nomStationChoisi = arrete.getDir().getname();
@@ -134,7 +135,7 @@ namespace MetroBoulotDodo.Services
                                 temps[nomStationChoisi].Temps = arrete.getTemps();
                             }
                         } else {
-                            temps.Add(nomStationChoisi, new PathElement(arrete.getTemps() + temps[arrete.getStationOrigine().getname()].Temps, arrete.getStationOrigine().getname()));
+                            temps.Add(nomStationChoisi, new PathElement(arrete.getDir(),arrete.getTemps() + temps[arrete.getStationOrigine().getname()].Temps, arrete.getStationOrigine().getname()));
                         }
                     }
                 }
