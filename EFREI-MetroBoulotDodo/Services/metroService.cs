@@ -14,12 +14,14 @@ namespace MetroBoulotDodo.Services
     {
         private readonly string fileMetro = @"./Data/metro.txt";
         private IDictionary<int, Station> Stations = new Dictionary<int, Station>();
-       
+
         public metroService()
         {
             //faire initialisation au lancement de l'app et non pas au lancement dune requete
             readFileMetro();
-            getShortestPath(45, 63);
+            Station start = Stations[26];
+            Station end = Stations[24];
+            getShortestPath(start, end);
         }
 
 
@@ -34,7 +36,7 @@ namespace MetroBoulotDodo.Services
                 int y;
                 int t;
                 bool premiere = true;
-                int num =0;
+                int num = 0;
                 string name;
                 int i;
 
@@ -45,31 +47,31 @@ namespace MetroBoulotDodo.Services
                         if (line[0] == 'V')
                         {
                             // Les sommets !
-                           // System.Diagnostics.Debug.WriteLine(line);
-                           if(line.Split(';').Length == 3)
+                            // System.Diagnostics.Debug.WriteLine(line);
+                            if (line.Split(';').Length == 3)
                             {
                                 i = 0;
                                 name = "";
                                 foreach (var part in line.Split(';')[0].Split(' '))
                                 {
-                                    if(i==1)
+                                    if (i == 1)
                                     {
                                         int.TryParse(line.Split(' ')[1], out num);
                                     }
-                                    if(i>1)
+                                    if (i > 1)
                                     {
-                                        if(i>2)
+                                        if (i > 2)
                                             name += " ";
                                         name += part;
                                     }
                                     i++;
                                 }
-                                
+
                                 if (string.Compare("True", line.Split(';')[2].Split(' ')[0]) == 0)
-                                    Stations.Add(num,new Station(num, name, line.Split(';')[1], true, line.Split(';')[2].Split(' ')[1]));
+                                    Stations.Add(num, new Station(num, name, line.Split(';')[1], true, line.Split(';')[2].Split(' ')[1]));
                                 else
                                     Stations.Add(num, new Station(num, name, line.Split(';')[1], false, line.Split(';')[2].Split(' ')[1]));
-                                
+
                             }
                         }
 
@@ -97,43 +99,49 @@ namespace MetroBoulotDodo.Services
         }
 
         // Store the new children directly in the distances map and sort the map afterwards, then add the first element of the map to path that isnt already a part of it
-        private List<Station> getShortestPath(int idDebut, int idFin)
+        private List<PathElement> getShortestPath(Station debut, Station fin)
         {
-            Station debut = Stations[idDebut];
-            Station fin = Stations[idFin];
+
             IDictionary<string, PathElement> temps = new Dictionary<string, PathElement>();
-            temps.Add(debut.getname(), new PathElement(0, null));
-            List<Station> traites = new List<Station>();
-            traites.Add(debut);
-            while (!(traites.Any(item=> item.getname() == fin.getname()))){
+            temps.Add(debut.getname(), new PathElement(debut, 0, null));
+            IDictionary<int, Station> traites = new Dictionary<int, Station>();
+            //List<Station> traites = new List<Station>();
+            traites.Add(debut.getNumero(), debut);
+            while (!(traites.Any(item => item.Value.getname() == fin.getname())))
+            {
 
                 List<Arrete> connectes = new List<Arrete>();
-                foreach(Station station in traites) {
+                foreach (Station station in traites.Values)
+                {
                     foreach (Arrete arrete in station.getConnectes())
                     {
                         connectes.Add(arrete);
                     }
-                        
+
                 }
 
                 metroService.quickSort(connectes, 0, connectes.Count - 1);
                 bool firstNonTraites = true;
-                foreach(Arrete arrete in connectes)
+                foreach (Arrete arrete in connectes)
                 {
-                    if (!(traites.Any(item => item.getname() == arrete.getDir().getname())))
+                    if (!(traites.ContainsKey(arrete.getDir().getNumero())))//Changement de ligne pas possible.  Here we say 'No trait pas les aretes qui vont a un station deja traitees. Mais '
                     {
-                        if(firstNonTraites)
+                        if (firstNonTraites)
                         {
-                            traites.Add(arrete.getDir());
+                            traites.Add(arrete.getDir().getNumero(), arrete.getDir());
                         }
                         //Mettre a jour la distance
                         string nomStationChoisi = arrete.getDir().getname();
-                        if (temps.ContainsKey(nomStationChoisi)) {
-                            if ((arrete.getTemps() + temps[arrete.getStationOrigine().getname()].Temps)  < temps[nomStationChoisi].Temps ) {
+                        if (temps.ContainsKey(nomStationChoisi))
+                        {
+                            if ((arrete.getTemps() + temps[arrete.getStationOrigine().getname()].Temps) < temps[nomStationChoisi].Temps)
+                            {
                                 temps[nomStationChoisi].Temps = arrete.getTemps();
                             }
-                        } else {
-                            temps.Add(nomStationChoisi, new PathElement(arrete.getTemps() + temps[arrete.getStationOrigine().getname()].Temps, arrete.getStationOrigine().getname()));
+                        }
+                        else
+                        {
+                            temps.Add(nomStationChoisi, new PathElement(arrete.getDir(), arrete.getTemps() + temps[arrete.getStationOrigine().getname()].Temps, arrete.getStationOrigine().getname()));
                         }
                     }
                 }
@@ -141,16 +149,20 @@ namespace MetroBoulotDodo.Services
             }
             List<PathElement> path = new List<PathElement>();
             PathElement tempElement = temps[fin.getname()];
-            while (tempElement != null) {
+            path.Add(tempElement);
+            while (tempElement.NomAntecedant != null)
+            {
                 path.Add(tempElement);
                 tempElement = temps[tempElement.NomAntecedant];
             }
-            return null;
+
+
+            return path;
         }
 
-       
+
         //Possible use of quick sort but finally, no need.
-        private static void quickSort(List<Arrete> list,int premier, int dernier)
+        private static void quickSort(List<Arrete> list, int premier, int dernier)
         {
             if (premier < dernier)
             {
