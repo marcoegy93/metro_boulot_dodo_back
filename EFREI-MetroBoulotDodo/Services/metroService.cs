@@ -19,7 +19,7 @@ namespace MetroBoulotDodo.Services
         {
             //faire initialisation au lancement de l'app et non pas au lancement dune requete
             readFileMetro();
-            getShortestPath(24, 23);
+            getShortestPath(26, 24);
         }
 
 
@@ -120,31 +120,41 @@ namespace MetroBoulotDodo.Services
                 }
 
                 metroService.quickSort(connectes, 0, connectes.Count - 1);
-                bool firstNonTraites = true;
+                bool firstIt = true;
+                int shortestTime = 0;
+                Station nextTraitee = null;
                 foreach (Arrete arrete in connectes)
                 {
                     if (!(traites.ContainsKey(arrete.getDir().getNumero())))//Changement de ligne pas possible.  Here we say 'No trait pas les aretes qui vont a un station deja traitees. Mais '
                     {
-                        if (firstNonTraites)
+                        /*if (firstNonTraites)
                         {
                             traites.Add(arrete.getDir().getNumero(), arrete.getDir());
-                        }
+                        }*/
+
                         //Mettre a jour la distance
                         string nomStationChoisi = arrete.getDir().getname();
-                        if (temps.ContainsKey(nomStationChoisi))
-                        {
-                            if ((arrete.getTemps() + temps[arrete.getStationOrigine().getname()].Temps) < temps[nomStationChoisi].Temps)
-                            {
+                        int totaleTime = arrete.getTemps() + temps[arrete.getStationOrigine().getname()].Temps;
+                        if (temps.ContainsKey(nomStationChoisi)) {
+                            if (totaleTime < temps[nomStationChoisi].Temps) {
                                 temps[nomStationChoisi].Temps = arrete.getTemps();
                             }
+                        } else {
+                            temps.Add(nomStationChoisi, new PathElement(arrete.getDir(), totaleTime, arrete.getStationOrigine().getname()));
                         }
-                        else
-                        {
-                            temps.Add(nomStationChoisi, new PathElement(arrete.getDir(), arrete.getTemps() + temps[arrete.getStationOrigine().getname()].Temps, arrete.getStationOrigine().getname()));
+                        if (firstIt) {
+                            firstIt = false;
+                            shortestTime = totaleTime;
+                            nextTraitee = arrete.getDir();
+                        } else {
+                            if (totaleTime < shortestTime) {
+                                shortestTime = totaleTime;
+                                nextTraitee = arrete.getDir();
+                            }
                         }
                     }
                 }
-
+                if(nextTraitee != null) traites.Add(nextTraitee.getNumero(), nextTraitee);
             }
             List<PathElement> path = new List<PathElement>();
             PathElement tempElement = temps[fin.getname()];
