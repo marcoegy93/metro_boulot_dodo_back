@@ -137,7 +137,7 @@ namespace MetroBoulotDodo.Services
                         int totaleTime = arrete.getTemps() + temps[arrete.getStationOrigine().getname()].Temps;
                         if (temps.ContainsKey(nomStationChoisi)) {
                             if (totaleTime < temps[nomStationChoisi].Temps) {
-                                temps[nomStationChoisi].Temps = arrete.getTemps();
+                                temps[nomStationChoisi].Temps = totaleTime;
                             }
                         } else {
                             temps.Add(nomStationChoisi, new PathElement(arrete.getDir(), totaleTime, arrete.getStationOrigine().getname()));
