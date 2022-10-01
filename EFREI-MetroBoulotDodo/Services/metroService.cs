@@ -19,7 +19,6 @@ namespace MetroBoulotDodo.Services
         {
             //faire initialisation au lancement de l'app et non pas au lancement dune requete
             readFileMetro();
-            
             getShortestPath(24, 23);
         }
 
@@ -152,8 +151,8 @@ namespace MetroBoulotDodo.Services
             path.Add(tempElement);
             while (tempElement.NomAntecedant != null)
             {
-                path.Add(tempElement);
                 tempElement = temps[tempElement.NomAntecedant];
+                path.Add(tempElement);
             }
 
 
