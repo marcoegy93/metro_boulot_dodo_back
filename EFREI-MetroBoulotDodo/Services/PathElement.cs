@@ -8,27 +8,39 @@ using System.Threading.Tasks;
 
 namespace MetroBoulotDodo.Services
 {
-    /*public class PathElement
+    public class PathElement
     {
-        private int _temps;  // the name field
-        public int Temps    // the Name property
+        private Station _station;  // the name field
+        public Station Station    // the Name property
+        {
+            get => _station;
+            set => _station = value;
+        }
+
+        private int _temps;
+        public int Temps
         {
             get => _temps;
             set => _temps = value;
         }
-        private int _numAntecedant;  // the name field
-        public int NumAntecedant    // the Name property
+        private int? _numAntecedant;
+        public int? NumAntecedant
         {
             get => _numAntecedant;
             set => _numAntecedant = value;
         }
-        public PathElement(int temps, int numAntecedant)
+
+        public PathElement(Station station, int temps, int? numAntecedant)
         {
+            this._station = station;
             this._temps = temps;
             this._numAntecedant = numAntecedant;
         }
-    }*/
 
+    }
+
+    
+    /*
     public class PathElement
     {
         private Station _station;  // the name field
@@ -58,5 +70,5 @@ namespace MetroBoulotDodo.Services
             this._nomAntecedant = nomAntecedant;
         }
 
-    }
+    }*/
 }

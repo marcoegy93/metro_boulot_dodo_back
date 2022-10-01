@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -101,12 +102,14 @@ namespace MetroBoulotDodo.Services
         {
             Station debut = Stations[idDebut];
             Station fin = Stations[idFin];
-            IDictionary<string, PathElement> temps = new Dictionary<string, PathElement>();
-            temps.Add(debut.getname(), new PathElement(debut, 0, null));
+            IDictionary<int, PathElement> temps = new Dictionary<int, PathElement>();
+            temps.Add(debut.getNumero(), new PathElement(debut, 0, null));
             IDictionary<int, Station> traites = new Dictionary<int, Station>();
+            List<int> ids = new List<int>();
+            ids.Add(idFin);
             //List<Station> traites = new List<Station>();
             traites.Add(debut.getNumero(), debut);
-            while (!(traites.Any(item => item.Value.getname() == fin.getname())))
+            while (!(traites.Any(item => ids.Contains(item.Key)))) // do this until we find an item with an id inside of a list of ids
             {
 
                 List<Arrete> connectes = new List<Arrete>();
@@ -127,20 +130,16 @@ namespace MetroBoulotDodo.Services
                 {
                     if (!(traites.ContainsKey(arrete.getDir().getNumero())))//Changement de ligne pas possible.  Here we say 'No trait pas les aretes qui vont a un station deja traitees. Mais '
                     {
-                        /*if (firstNonTraites)
-                        {
-                            traites.Add(arrete.getDir().getNumero(), arrete.getDir());
-                        }*/
-
+                       
                         //Mettre a jour la distance
-                        string nomStationChoisi = arrete.getDir().getname();
-                        int totaleTime = arrete.getTemps() + temps[arrete.getStationOrigine().getname()].Temps;
-                        if (temps.ContainsKey(nomStationChoisi)) {
-                            if (totaleTime < temps[nomStationChoisi].Temps) {
-                                temps[nomStationChoisi].Temps = totaleTime;
+                        int numStationChoisi = arrete.getDir().getNumero();
+                        int totaleTime = arrete.getTemps() + temps[arrete.getStationOrigine().getNumero()].Temps;
+                        if (temps.ContainsKey(numStationChoisi)) {
+                            if (totaleTime < temps[numStationChoisi].Temps) {
+                                temps[numStationChoisi].Temps = totaleTime;
                             }
                         } else {
-                            temps.Add(nomStationChoisi, new PathElement(arrete.getDir(), totaleTime, arrete.getStationOrigine().getname()));
+                            temps.Add(numStationChoisi, new PathElement(arrete.getDir(), totaleTime, arrete.getStationOrigine().getNumero()));
                         }
                         if (firstIt) {
                             firstIt = false;
@@ -157,11 +156,11 @@ namespace MetroBoulotDodo.Services
                 if(nextTraitee != null) traites.Add(nextTraitee.getNumero(), nextTraitee);
             }
             List<PathElement> path = new List<PathElement>();
-            PathElement tempElement = temps[fin.getname()];
+            PathElement tempElement = temps[fin.getNumero()];
             path.Add(tempElement);
-            while (tempElement.NomAntecedant != null)
+            while (tempElement.NumAntecedant != null)
             {
-                tempElement = temps[tempElement.NomAntecedant];
+                tempElement = temps[tempElement.NumAntecedant.Value];
                 path.Add(tempElement);
             }
 
