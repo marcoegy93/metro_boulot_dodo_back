@@ -25,7 +25,12 @@ namespace MetroBoulotDodo.Services
             System.Diagnostics.Debug.WriteLine(
                                   "Station: " + dir.getname()
                                   + " temps: " + temps
-                                   ) ;
+                                   );
+        }
+
+        public Station GetStation()
+        {
+            return dir;
         }
 
 
