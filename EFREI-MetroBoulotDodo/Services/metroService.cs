@@ -14,6 +14,7 @@ namespace MetroBoulotDodo.Services
     public class metroService
     {
         private readonly string fileMetro = @"./Data/metro.txt";
+        private readonly string filePos = @"./Data/pospoints.txt";
         private IDictionary<int, Station> Stations = new Dictionary<int, Station>();
 
         public metroService()
@@ -92,9 +93,95 @@ namespace MetroBoulotDodo.Services
                         }
                     }
                 }
-                foreach (KeyValuePair<int, Station> sta in Stations)
-                    sta.Value.stringtest();
             }
+            using (StreamReader ReaderObject = new StreamReader(filePos))
+            {
+                string line;
+                string namesta;
+                string memoire = "";
+                bool premiere;
+                bool trouve;
+                while ((line = ReaderObject.ReadLine()) != null)
+                {
+                    namesta = "";
+                    trouve = false;
+                    premiere = true;
+                    foreach (string s in line.Split(';')[2].Split('@'))
+                    {
+
+                        namesta += s + " ";
+                        premiere = false;
+                    }
+                    if (string.Compare(namesta, memoire) == 0)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        memoire = namesta;
+                    }
+                    foreach (KeyValuePair<int, Station> sta in Stations)
+                    {
+                        if (string.Compare(namesta, sta.Value.getname()) == 0)
+                        {
+
+                            sta.Value.setco(line.Split(';')[0], line.Split(';')[1]);
+                            trouve = true;
+                        }
+                        else if (trouve)
+                            break;
+
+                    }
+                }
+                //foreach (KeyValuePair<int, Station> sta in Stations)
+                // sta.Value.stringtest();
+            }
+        }
+
+        public string retourarbre()
+        {
+            string retour = "";
+            foreach (KeyValuePair<int, Station> sta in Stations)
+                retour += sta.Value.affichearretes();
+            return retour;
+        }
+
+        public string Crearbre()
+        {
+            string retour = "";
+            foreach (KeyValuePair<int, Station> sta in Stations)
+                retour += sta.Value.affichestation();
+            return retour;
+        }
+
+        public string isConnexe()
+        {
+            string retour = "Connexe";
+            Stations[0].isConnexe();
+            foreach (KeyValuePair<int, Station> sta in Stations)
+            {
+                if (!sta.Value.getConn())
+                {
+                    retour = "Non Connexe";
+                    break;
+                }
+            }
+            return retour;
+        }
+
+        public string getDijkstra(int idDebut, int idFin)
+        {
+            List<PathElement> Dijkstra = getShortestPath(idDebut, idFin);
+            PathElement e;
+            string retour = "";
+            for(int i = 0;i< Dijkstra.Count; i++)
+            {
+                e = Dijkstra[Dijkstra.Count - 1 - i];
+                if(e.NumAntecedant!=null)
+                    retour += Stations[e.NumAntecedant.Value].affichearrete(e.Station); 
+            }
+            retour += Dijkstra[0].Temps;
+            return retour;
         }
 
         // Store the new children directly in the distances map and sort the map afterwards, then add the first element of the map to path that isnt already a part of it

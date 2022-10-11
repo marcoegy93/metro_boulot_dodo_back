@@ -18,19 +18,33 @@ namespace EFREI_MetroBoulotDodo.Controllers
             this._metroService = metroService;
         }
 
-          [HttpGet("isConnexe")]
-          public IEnumerable<string> isConnexe()
-          {
-            
-              return  new List<string>() { "c#" ,"sql"};
-          }
+        [HttpGet("Crearbre")]
+        public string Crearbre()
+        {
 
-            [HttpGet("test")]
-            public IEnumerable<string> getDijkstra()
-            {
-            int a = 2;
-                return new List<string>() { "c#", "sql" };
-            }
+            return _metroService.Crearbre();
+        }
+
+        [HttpGet("Retourarbre")]
+        public string RetourStation()
+        {
+
+            return _metroService.retourarbre(); ;
+        }
+
+        [HttpGet("isConnexe")]
+        public string isConnexe()
+        {
+
+            return _metroService.isConnexe();
+        }
+
+        [HttpGet("Dijstra")]
+        public string getDijkstra(int sta1, int sta2)
+        {
+
+            return _metroService.getDijkstra(sta1, sta2);
+        }
 
 
 
