@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using System.Xml.Linq;
 
 namespace MetroBoulotDodo.Services
@@ -154,15 +155,15 @@ namespace MetroBoulotDodo.Services
             return retour;
         }
 
-        public string isConnexe()
+        public bool isConnexe()
         {
-            string retour = "Connexe";
+            bool retour = true;
             Stations[0].isConnexe();
             foreach (KeyValuePair<int, Station> sta in Stations)
             {
                 if (!sta.Value.getConn())
                 {
-                    retour = "Non Connexe";
+                    retour = false;
                     break;
                 }
             }
@@ -292,6 +293,47 @@ namespace MetroBoulotDodo.Services
             Arrete tmp = list[pivot];
             list[pivot] = list[dernier];
             list[dernier] = tmp;
+        }
+
+        public string getACPM()
+        {
+            Arrete memory;
+            int id;
+            bool stop = false;
+            string retour = "";
+            List<Arrete> list = new List<Arrete>();
+            IEnumerable<Arrete> query;
+            list.AddRange(Stations[0].getConnectes());
+            while (list.Count > 0)
+            {
+                System.Diagnostics.Debug.WriteLine("c");
+                id = 0;
+                query = from arr in list
+                        orderby arr.getTemps()
+                        select arr;
+                while (query.ElementAt(id).getDir().getACPM())
+                {
+                    
+                    System.Diagnostics.Debug.WriteLine(query.ElementAt(id).getDir().getACPM());
+                    
+                    
+                    list.Remove(query.ElementAt(id));
+                    id++;
+                    if (id >= query.Count())
+                    {
+                        stop = true;
+                        break;
+                    }
+
+                }
+                if (stop) break;
+                System.Diagnostics.Debug.WriteLine("b");
+                memory = query.ElementAt(id);
+                retour += memory.toString();
+                memory.getDir().setACPM();
+                list.AddRange(memory.getDir().getConnectes());
+            }
+            return retour;
         }
     }
 }

@@ -25,6 +25,12 @@ namespace MetroBoulotDodo.Services
             return temps;
         }
 
+        public string toString()
+        {
+            System.Diagnostics.Debug.WriteLine("a");
+            return stationOrigine.getNumero() + ";" + stationOrigine.getname() + ";" + stationOrigine.getcoo() + ";" + dir.getNumero() + ";" + dir.getname() + ";" + dir.getcoo() + ";" + dir.getligne() + "\n";
+        }
+
         public Station getStationOrigine() { return stationOrigine; }
 
         public Arrete(Station dir, Station stationOrigine, int temps)

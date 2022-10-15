@@ -33,7 +33,7 @@ namespace EFREI_MetroBoulotDodo.Controllers
         }
 
         [HttpGet("isConnexe")]
-        public string isConnexe()
+        public bool isConnexe()
         {
 
             return _metroService.isConnexe();
@@ -44,6 +44,13 @@ namespace EFREI_MetroBoulotDodo.Controllers
         {
 
             return _metroService.getDijkstra(sta1, sta2);
+        }
+
+        [HttpGet("ACPM")]
+        public string getACPM()
+        {
+
+            return _metroService.getACPM();
         }
 
 

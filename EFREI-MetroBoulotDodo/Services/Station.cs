@@ -17,6 +17,7 @@ namespace MetroBoulotDodo.Services
         private int num;
         private string coord;
         private bool Connexe;
+        private bool ACPM;
         private List<Arrete> connectes = new List<Arrete>();
 
 
@@ -27,6 +28,7 @@ namespace MetroBoulotDodo.Services
             this.ligne = ligne;
             this.terminus = terminus;
             this.Connexe = false;
+            this.ACPM = false;
             this.embranchement = embranchement;
             this.stringtest();
         }
@@ -83,23 +85,31 @@ namespace MetroBoulotDodo.Services
         {
             return this.num + ";" + this.name + ";" + this.coord + ";" + this.ligne + "\n";
         }
+
+        public string getligne()
+        {
+            return ligne;
+        }
         public string affichearrete(Station vers)
         {
-            string retour = "";
+            
             foreach (Arrete a in connectes)
             {
                 if (string.Compare(vers.getname(), a.getDir().getname()) == 0)
                 {
-                    retour += this.num + ";" + this.name + ";" + this.coord + ";" + a.getDir().getNumero() + ";" + a.getDir().getname() + ";" + a.getDir().getcoo() + ";" + this.ligne + "\n";
-                    break;
+                    return this.num + ";" + this.name + ";" + this.coord + ";" + a.getDir().getNumero() + ";" + a.getDir().getname() + ";" + a.getDir().getcoo() + ";" + this.ligne + "\n";
+                    
                 }
             }
-            return retour;
+            return "";
         }
         public List<Arrete> getConnectes()
         {
             return connectes;
         }
+
+        public void setACPM() { this.ACPM = true; }
+        public bool getACPM() { return this.ACPM; }
         public int getNumero() { return num; }
 
         public void isConnexe()
