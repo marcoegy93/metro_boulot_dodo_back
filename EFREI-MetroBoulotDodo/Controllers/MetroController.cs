@@ -39,7 +39,7 @@ namespace EFREI_MetroBoulotDodo.Controllers
             return _metroService.isConnexe();
         }
 
-        [HttpGet("Dijstra")]
+        [HttpGet("Dijstra/{sta1}/{sta2}")]
         public string getDijkstra(int sta1, int sta2)
         {
 
