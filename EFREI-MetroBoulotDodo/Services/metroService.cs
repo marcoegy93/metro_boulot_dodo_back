@@ -295,44 +295,79 @@ namespace MetroBoulotDodo.Services
             list[dernier] = tmp;
         }
 
+        public List<Arrete> Fusion(List<Arrete> a, List<Arrete> b)
+        {
+            List<Arrete> list = new List<Arrete>();
+            int l1 = 0, l2 = 0;
+            int id = 0;
+            while( l1<a.Count && l2 < b.Count)
+            {
+                if(a[l1].getTemps() <= b[l2].getTemps())
+                {
+                    list.Add(a[l1]);
+                    l1++;
+                }
+                else
+                {
+                    list.Add(b[l2]);
+                    l2++;  
+                }
+            }
+            for(; l1 < a.Count;l1++)
+            {
+                list.Add(a[l1]);
+            }
+            for (; l2 < b.Count; l2++)
+            {
+                list.Add(b[l2]);
+            }
+            return list;
+        } 
+
+        public List<Arrete> trilist(List<Arrete> a)
+        {
+            a.Sort((x, y) => x.getTemps().CompareTo(y.getTemps()));
+            return a;
+        }
         public string getACPM()
         {
             Arrete memory;
+            int temps =0;
             int id;
             bool stop = false;
             string retour = "";
             List<Arrete> list = new List<Arrete>();
-            IEnumerable<Arrete> query;
+            List<Arrete> query;
             list.AddRange(Stations[0].getConnectes());
+            Stations[0].setACPM();
+            trilist(list);
             while (list.Count > 0)
             {
-                System.Diagnostics.Debug.WriteLine("c");
-                id = 0;
-                query = from arr in list
-                        orderby arr.getTemps()
-                        select arr;
-                while (query.ElementAt(id).getDir().getACPM())
+                while (list.First().getDir().getACPM())
                 {
-                    
-                    System.Diagnostics.Debug.WriteLine(query.ElementAt(id).getDir().getACPM());
-                    
-                    
-                    list.Remove(query.ElementAt(id));
-                    id++;
-                    if (id >= query.Count())
+
+
+                    list.Remove(list.First());                    
+                    if (list.Count()==0)
                     {
                         stop = true;
+                        System.Diagnostics.Debug.WriteLine("stop");
                         break;
                     }
 
                 }
                 if (stop) break;
-                System.Diagnostics.Debug.WriteLine("b");
-                memory = query.ElementAt(id);
+                temps += list.First().getTemps();
+                memory = list.First();
+                list.Remove(list.First());
                 retour += memory.toString();
                 memory.getDir().setACPM();
-                list.AddRange(memory.getDir().getConnectes());
+                query = new List<Arrete>();
+                query.AddRange(memory.getDir().getConnectes());
+                query = trilist(query);
+                list = Fusion(list, query);
             }
+            retour += temps;
             return retour;
         }
     }
