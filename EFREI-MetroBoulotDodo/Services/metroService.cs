@@ -371,7 +371,9 @@ namespace MetroBoulotDodo.Services
             foreach(KeyValuePair<int, Station> sta in Stations)
             {
                 sta.Value.resACPM();
+                System.Diagnostics.Debug.WriteLine(sta.Value.getACPM()) ;
             }
+
             return retour;
         }
     }

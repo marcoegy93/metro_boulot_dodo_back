@@ -27,7 +27,6 @@ namespace MetroBoulotDodo.Services
 
         public string toString()
         {
-            System.Diagnostics.Debug.WriteLine("a");
             return stationOrigine.getNumero() + ";" + stationOrigine.getname() + ";" + stationOrigine.getcoo() + ";" + dir.getNumero() + ";" + dir.getname() + ";" + dir.getcoo() + ";" + dir.getligne() + "\n";
         }
 
