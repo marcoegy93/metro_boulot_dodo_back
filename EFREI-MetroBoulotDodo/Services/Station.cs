@@ -51,6 +51,10 @@ namespace MetroBoulotDodo.Services
         {
             return name;
         }
+        public void resACPM()
+        {
+            ACPM = false;
+        }
 
         public void setco(string x, string y)
         {

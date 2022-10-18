@@ -368,6 +368,10 @@ namespace MetroBoulotDodo.Services
                 list = Fusion(list, query);
             }
             retour += temps;
+            foreach(KeyValuePair<int, Station> sta in Stations)
+            {
+                sta.Value.resACPM();
+            }
             return retour;
         }
     }
