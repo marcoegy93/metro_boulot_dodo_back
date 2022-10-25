@@ -53,6 +53,13 @@ namespace EFREI_MetroBoulotDodo.Controllers
             return _metroService.getACPM();
         }
 
+        [HttpGet("ACPMGARE")]
+        public string getACPMGare()
+        {
+
+            return _metroService.getACPMGare();
+        }
+
 
 
     }

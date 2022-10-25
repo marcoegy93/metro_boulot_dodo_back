@@ -376,5 +376,70 @@ namespace MetroBoulotDodo.Services
 
             return retour;
         }
+        public string getACPMGare()
+        {
+            Arrete memory;
+            int temps = 0;
+            int id;
+            bool stop = false;
+            string retour = "";
+            List<Arrete> list = new List<Arrete>();
+            List<Arrete> query;
+            list.AddRange(Stations[0].getConnectes());
+            Stations[0].setACPM();
+            trilist(list);
+            while (list.Count > 0)
+            {
+                while (list.First().getDir().getACPM())
+                {
+
+
+                    list.Remove(list.First());
+                    if (list.Count() == 0)
+                    {
+                        stop = true;
+                        System.Diagnostics.Debug.WriteLine("stop");
+                        break;
+                    }
+
+                }
+                if (stop) break;
+                temps += list.First().getTemps();
+                memory = list.First();
+                list.Remove(list.First());
+                retour += memory.toString();
+                memory.getDir().setACPM();
+                query = new List<Arrete>();
+                query.AddRange(memory.getDir().getConnectes());
+                for(int i = 0; memory.getDir().getNumero() + i < Stations.Count; i++)
+                {
+                    if (String.Compare(memory.getDir().getname(), Stations[memory.getDir().getNumero() + i].getname()) == 0)
+                    {
+                        Stations[memory.getDir().getNumero() + i].setACPM();
+                        query.AddRange(Stations[memory.getDir().getNumero() + i].getConnectes());
+                    }
+                    else break;
+                }
+                for (int i = 0; memory.getDir().getNumero() - i > 0; i++)
+                {
+                    if (String.Compare(memory.getDir().getname(), Stations[memory.getDir().getNumero() - i].getname()) == 0)
+                    {
+                        Stations[memory.getDir().getNumero() - i].setACPM();
+                        query.AddRange(Stations[memory.getDir().getNumero() - i].getConnectes());
+                    }
+                    else break;
+                }
+                query = trilist(query);
+                list = Fusion(list, query);
+            }
+            retour += temps;
+            foreach (KeyValuePair<int, Station> sta in Stations)
+            {
+                sta.Value.resACPM();
+                System.Diagnostics.Debug.WriteLine(sta.Value.getACPM());
+            }
+
+            return retour;
+        }
     }
 }
