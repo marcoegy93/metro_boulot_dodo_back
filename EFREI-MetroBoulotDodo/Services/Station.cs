@@ -16,8 +16,6 @@ namespace MetroBoulotDodo.Services
         private string ligne;
         private int num;
         private string coord;
-        private bool Connexe;
-        private bool ACPM;
         private List<Arrete> connectes = new List<Arrete>();
 
 
@@ -27,34 +25,15 @@ namespace MetroBoulotDodo.Services
             this.name = name;
             this.ligne = ligne;
             this.terminus = terminus;
-            this.Connexe = false;
-            this.ACPM = false;
             this.embranchement = embranchement;
-            this.stringtest();
         }
 
-        public void stringtest()
-        {
-            System.Diagnostics.Debug.WriteLine(
-                                  "num_sommet: " + num
-                                  + " nom_sommet: " + name
-                                  + " numéro_ligne: " + ligne
-                                  + " si_terminus: " + terminus
-                                  + " branchement: " + embranchement
-                                   );
-            foreach(Arrete a in connectes)
-            {
-                a.stringtest();
-            }
-        }
+        
         public string getname()
         {
             return name;
         }
-        public void resACPM()
-        {
-            this.ACPM = false;
-        }
+        
 
         public void setco(string x, string y)
         {
@@ -112,26 +91,21 @@ namespace MetroBoulotDodo.Services
             return connectes;
         }
 
-        public void setACPM() { this.ACPM = true; }
-        public bool getACPM() { return this.ACPM; }
         public int getNumero() { return num; }
 
-        public void isConnexe()
+        public void isConnexe(IDictionary<int, bool> bools)
         {
-            if (!Connexe)
+            if (!bools[this.num])
             {
-                Connexe = true;
+                bools[this.num] = true;
                 foreach (Arrete a in connectes)
                 {
-                    a.getDir().isConnexe();
+                    a.getDir().isConnexe(bools);
                 }
             }
         }
 
-        public bool getConn()
-        {
-            return Connexe;
-        }
+       
 
 
 

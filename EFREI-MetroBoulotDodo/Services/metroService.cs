@@ -157,11 +157,16 @@ namespace MetroBoulotDodo.Services
 
         public bool isConnexe()
         {
-            bool retour = true;
-            Stations[0].isConnexe();
+            IDictionary<int, bool> bools = new Dictionary<int, bool>();
             foreach (KeyValuePair<int, Station> sta in Stations)
             {
-                if (!sta.Value.getConn())
+                bools[sta.Value.getNumero()] = false;
+            }
+            bool retour = true;
+            Stations[0].isConnexe(bools);
+            foreach (KeyValuePair<int, bool> bol in bools)
+            {
+                if (!bol.Value)
                 {
                     retour = false;
                     break;
@@ -331,6 +336,11 @@ namespace MetroBoulotDodo.Services
         }
         public string getACPM()
         {
+            IDictionary<int, bool> bools = new Dictionary<int, bool>();
+            foreach (KeyValuePair<int, Station> sta in Stations)
+            {
+                bools[sta.Value.getNumero()] = false;
+            }
             Arrete memory;
             int temps =0;
             int id;
@@ -339,11 +349,11 @@ namespace MetroBoulotDodo.Services
             List<Arrete> list = new List<Arrete>();
             List<Arrete> query;
             list.AddRange(Stations[0].getConnectes());
-            Stations[0].setACPM();
+            bools[0] =true;
             trilist(list);
             while (list.Count > 0)
             {
-                while (list.First().getDir().getACPM())
+                while (bools[list.First().getDir().getNumero()])
                 {
 
 
@@ -351,7 +361,6 @@ namespace MetroBoulotDodo.Services
                     if (list.Count()==0)
                     {
                         stop = true;
-                        System.Diagnostics.Debug.WriteLine("stop");
                         break;
                     }
 
@@ -361,23 +370,23 @@ namespace MetroBoulotDodo.Services
                 memory = list.First();
                 list.Remove(list.First());
                 retour += memory.toString();
-                memory.getDir().setACPM();
+                bools[memory.getDir().getNumero()]=true;
                 query = new List<Arrete>();
                 query.AddRange(memory.getDir().getConnectes());
                 query = trilist(query);
                 list = Fusion(list, query);
             }
             retour += temps;
-            foreach(KeyValuePair<int, Station> sta in Stations)
-            {
-                sta.Value.resACPM();
-                System.Diagnostics.Debug.WriteLine(sta.Value.getACPM()) ;
-            }
 
             return retour;
         }
         public string getACPMGare()
         {
+            IDictionary<int, bool> bools = new Dictionary<int, bool>();
+            foreach (KeyValuePair<int, Station> sta in Stations)
+            {
+                bools[sta.Value.getNumero()] = false;
+            }
             Arrete memory;
             int temps = 0;
             int id;
@@ -386,11 +395,11 @@ namespace MetroBoulotDodo.Services
             List<Arrete> list = new List<Arrete>();
             List<Arrete> query;
             list.AddRange(Stations[0].getConnectes());
-            Stations[0].setACPM();
+            bools[0] = true;
             trilist(list);
             while (list.Count > 0)
             {
-                while (list.First().getDir().getACPM())
+                while (bools[list.First().getDir().getNumero()])
                 {
 
 
@@ -398,7 +407,6 @@ namespace MetroBoulotDodo.Services
                     if (list.Count() == 0)
                     {
                         stop = true;
-                        System.Diagnostics.Debug.WriteLine("stop");
                         break;
                     }
 
@@ -408,14 +416,14 @@ namespace MetroBoulotDodo.Services
                 memory = list.First();
                 list.Remove(list.First());
                 retour += memory.toString();
-                memory.getDir().setACPM();
+                bools[memory.getDir().getNumero()] = true;
                 query = new List<Arrete>();
                 query.AddRange(memory.getDir().getConnectes());
                 for(int i = 0; memory.getDir().getNumero() + i < Stations.Count; i++)
                 {
                     if (String.Compare(memory.getDir().getname(), Stations[memory.getDir().getNumero() + i].getname()) == 0)
                     {
-                        Stations[memory.getDir().getNumero() + i].setACPM();
+                        bools[memory.getDir().getNumero() + i] = true;
                         query.AddRange(Stations[memory.getDir().getNumero() + i].getConnectes());
                     }
                     else break;
@@ -424,7 +432,7 @@ namespace MetroBoulotDodo.Services
                 {
                     if (String.Compare(memory.getDir().getname(), Stations[memory.getDir().getNumero() - i].getname()) == 0)
                     {
-                        Stations[memory.getDir().getNumero() - i].setACPM();
+                        bools[memory.getDir().getNumero() - i] =true;
                         query.AddRange(Stations[memory.getDir().getNumero() - i].getConnectes());
                     }
                     else break;
@@ -433,11 +441,6 @@ namespace MetroBoulotDodo.Services
                 list = Fusion(list, query);
             }
             retour += temps;
-            foreach (KeyValuePair<int, Station> sta in Stations)
-            {
-                sta.Value.resACPM();
-                System.Diagnostics.Debug.WriteLine(sta.Value.getACPM());
-            }
 
             return retour;
         }
