@@ -150,8 +150,16 @@ namespace MetroBoulotDodo.Services
         public string Crearbre()
         {
             string retour = "";
-            foreach (KeyValuePair<int, Station> sta in Stations)
-                retour += sta.Value.affichestation();
+            string nom = "";
+            foreach (KeyValuePair<int, Station> sta in Stations) {
+                if (sta.Value.getname() != nom)
+                {
+                    retour += sta.Value.affichestation();
+
+                    nom = sta.Value.getname();
+                }
+            }
+
             return retour;
         }
 
@@ -193,10 +201,13 @@ namespace MetroBoulotDodo.Services
         // Store the new children directly in the distances map and sort the map afterwards, then add the first element of the map to path that isnt already a part of it
         private List<PathElement> getShortestPath(int idDebut, int idFin)
         {
+            Station nextTraitee = null;
             Station debut = Stations[idDebut];
             Station fin = Stations[idFin];
             IDictionary<int, PathElement> temps = new Dictionary<int, PathElement>();
             temps.Add(debut.getNumero(), new PathElement(debut, 0, null));
+            for(int i = 1; Stations[idDebut].getname() == Stations[idDebut+i].getname();i++)
+                temps.Add(idDebut+i, new PathElement(Stations[idDebut+i], 0, null));
             IDictionary<int, Station> traites = new Dictionary<int, Station>();
             List<int> ids = new List<int>();
             ids.Add(idFin);
@@ -218,7 +229,7 @@ namespace MetroBoulotDodo.Services
                 metroService.quickSort(connectes, 0, connectes.Count - 1);
                 bool firstIt = true;
                 int shortestTime = 0;
-                Station nextTraitee = null;
+                
                 foreach (Arrete arrete in connectes)
                 {
                     if (!(traites.ContainsKey(arrete.getDir().getNumero())))//Changement de ligne pas possible.  Here we say 'No trait pas les aretes qui vont a un station deja traitees. Mais '
@@ -247,9 +258,10 @@ namespace MetroBoulotDodo.Services
                     }
                 }
                 if(nextTraitee != null) traites.Add(nextTraitee.getNumero(), nextTraitee);
+                if (nextTraitee.getname() == Stations[idFin].getname()) break;
             }
             List<PathElement> path = new List<PathElement>();
-            PathElement tempElement = temps[fin.getNumero()];
+            PathElement tempElement = temps[nextTraitee.getNumero()];
             path.Add(tempElement);
             while (tempElement.NumAntecedant != null)
             {
