@@ -22,7 +22,6 @@ namespace MetroBoulotDodo.Services
         {
             //faire initialisation au lancement de l'app et non pas au lancement dune requete
             readFileMetro();
-            getShortestPath(26, 24);
         }
 
 
@@ -225,8 +224,6 @@ namespace MetroBoulotDodo.Services
                     }
 
                 }
-
-                metroService.quickSort(connectes, 0, connectes.Count - 1);
                 bool firstIt = true;
                 int shortestTime = 0;
                 
